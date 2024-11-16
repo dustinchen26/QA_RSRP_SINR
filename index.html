@@ -18,27 +18,48 @@
             font-family: Roboto, sans-serif;
             white-space: nowrap; /* Prevent automatic line breaks */
             overflow-x: auto; /* Enable horizontal scrollbar */
+            margin: 0;
+            padding: 0;
         }
-		
+
+        /* Container setup */
         .container {
-            max-width: 900px;
-            margin: 0 auto;
+            width: 100%; /* Make container fill the entire width of the page */
+            padding-left: 20px; /* Add left padding to create space */
+            padding-right: 20px; /* Add right padding for symmetry */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        h2, p {
+            margin: 0; /* Remove default margins for the elements */
         }
 
         textarea {
-            width: 100%;
+            width: 100%; /* Make textarea fill the container */
             height: 200px;
             font-size: 14px;
             margin-bottom: 10px;
+            box-sizing: border-box; /* Include padding and border in width/height */
         }
+
         canvas {
             margin-top: 30px;
+        }
+
+        /* Optional: styling for links in the paragraph */
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>5great_Report_RSRP_SINR</h2>
+		<br>		
         <p style="margin: 0;">Author: Dustin_Chen, email: <a href="mailto:Dustin_Chen@compal.com"
             style="line-height: 1;">Dustin_Chen@compal.com</a> or <a href="mailto:chuhpsdustin@gmail.com"
             style="line-height: 1;">chuhpsdustin@gmail.com</a></p>
@@ -111,7 +132,7 @@
                 options: {
                     responsive: true,
                     scales: {
-                        x: { title: { display: true, text: '時間' } },
+                        x: { title: { display: true, text: 'Time' } },
                         y: { title: { display: true, text: 'RSRP (dBm)' } }
                     }
                 }
@@ -135,7 +156,7 @@
                 options: {
                     responsive: true,
                     scales: {
-                        x: { title: { display: true, text: '時間' } },
+                        x: { title: { display: true, text: 'Time' } },
                         y: { title: { display: true, text: 'SINR (dB)' } }
                     }
                 }
