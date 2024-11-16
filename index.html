@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSRP 和 SINR 圖表</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        canvas {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RSRP 和 SINR 圖表生成器</h1>
+        <textarea id="data-input" placeholder="請輸入資料，格式與範例相同..."></textarea>
+        <button onclick="generateCharts()">生成圖表</button>
+
+        <h2>RSRP 圖表</h2>
+        <canvas id="rsrpChart"></canvas>
+
+        <h2>SINR 圖表</h2>
+        <canvas id="sinrChart"></canvas>
+    </div>
+
+    <script>
+        // 用來存儲當前的圖表實例
+        let rsrpChartInstance = null;
+        let sinrChartInstance = null;
+
+        function generateCharts() {
+            // 獲取用戶輸入的資料
+            const inputData = document.getElementById("data-input").value.trim();
+            
+            // 解析資料
+            const timestamps = [];
+            const rsrps = [];
+            const sinrs = [];
+            
+            const lines = inputData.split('\n');
+            lines.forEach(line => {
+                const dateMatch = line.match(/\[(.*?)\]/);
+                const rsrpMatch = line.match(/RSRP\s*(-?\d+)\s*dBm/);
+                const sinrMatch = line.match(/SINR\s*(-?\d+)\s*dB/);
+                
+                if (dateMatch && rsrpMatch && sinrMatch) {
+                    const timestamp = dateMatch[1];
+                    const rsrp = parseInt(rsrpMatch[1]);
+                    const sinr = parseInt(sinrMatch[1]);
+                    
+                    timestamps.push(timestamp);
+                    rsrps.push(rsrp);
+                    sinrs.push(sinr);
+                }
+            });
+
+            // 如果已經存在圖表，先銷毀舊的圖表
+            if (rsrpChartInstance) {
+                rsrpChartInstance.destroy();
+            }
+            if (sinrChartInstance) {
+                sinrChartInstance.destroy();
+            }
+
+            // 創建 RSRP 圖表
+            const rsrpCtx = document.getElementById('rsrpChart').getContext('2d');
+            rsrpChartInstance = new Chart(rsrpCtx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: 'RSRP (dBm)',
+                        data: rsrps,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: '時間' } },
+                        y: { title: { display: true, text: 'RSRP (dBm)' } }
+                    }
+                }
+            });
+
+            // 創建 SINR 圖表
+            const sinrCtx = document.getElementById('sinrChart').getContext('2d');
+            sinrChartInstance = new Chart(sinrCtx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: 'SINR (dB)',
+                        data: sinrs,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: '時間' } },
+                        y: { title: { display: true, text: 'SINR (dB)' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
